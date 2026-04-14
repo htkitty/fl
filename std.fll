@@ -1,0 +1,87 @@
+#include <string.h>
+int syslog(const char *log_arg){
+	__asm__(
+			"movq $1, %%rax;"
+			"movq $1, %%rdi;"
+			"movq %0, %%rsi;"
+			"movq %1, %%rdx;"
+			"syscall;"
+			:
+			: "r"(log_arg), "r"(strlen(log_arg))
+			:"rax", "rdi", "rsi", "rdx"
+	       );
+}
+int sysexit(const char *excode){
+	if(excode == 0){
+		__asm__(
+				"movq $60, %%rax;"
+				"xorq %%rdi, %%rdi;"
+				"syscall;"
+				:
+				:
+				:"rax", "rdi"
+		       );
+	}else{
+		__asm__(
+				"movq $60, %%rax;"
+				"movq $1, %%rdi;"
+				"syscall;"
+				:
+				:
+				:"rax", "rdi"
+		       );
+	}
+}
+int sysmkdir(const char *dirname){
+	__asm__(
+			"movq $83, %%rax;"
+			"movq %0, %%rdi;"
+			"movq $0755, %%rsi;"
+			"syscall;"
+			:
+			:"r"(dirname)
+			:"rax", "rdi", "rsi"
+	       );
+}
+int sysgetuid(){
+	__asm__(
+			"movq $102, %%rax;"
+			"syscall;"
+			:
+			:
+			:"rax"
+	       );
+}
+int sysfork(){
+	__asm__(
+			"movq $57, %%rax;"
+			"syscall;"
+			:
+			:
+			:"rax"
+	       );
+}
+extern int sysread(long int adr, const char *mod){
+	if(mod[0] == 'i'){
+		__asm__(
+				"movq $0, %%rdi;"
+				"movq $0, %%rax;"
+				"movq %0, %%rsi;"
+				"movq $256, %%rdx;"
+				"syscall;"
+				:
+				:"r"(adr)
+				:"rax", "rdi", "rsi", "rdx"
+		       );
+	}else if(mod[0] == 'f'){
+		__asm__(
+				"movq $0, %%rax;"
+				"movq $256, %%rdx;"
+				"movq %0, %%rdi;"
+				"syscall;"
+				:
+				:"r"(adr)
+				:"rax", "rdi", "rsi", "rdx"
+		       );
+	}
+}
