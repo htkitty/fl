@@ -1,0 +1,9 @@
+/* featherweight-lang is based on assembly and c's built in custom functions,
+you can link it to your project to use fl by including it at the top of the file */
+
+//EXAMPLE-CODE:
+syslog("Hello World");
+sysexit(0);
+
+/* all of the names are based on linux syscalls, and the language is still in beta.
+fll is featherweight language library, for the libraries you can add externally */
